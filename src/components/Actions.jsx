@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Button, Col, Row, notification, Typography } from "antd";
-import { NavBar } from "antd-mobile";
+import {Image, Button, Col, Row, Typography } from "antd";
 import { useParams, navigate } from "@reach/router";
 import firebase from "firebase/app";
 import db from "../firebase";
 import { Discount, Sugar, Waiter, Water } from "./icon";
+import logo from "../bell.png"; 
 
 const Actions = () => {
   const table = useParams();
@@ -31,6 +31,7 @@ const Actions = () => {
     .doc(table.id)
     .get()
     .then((doc) => setTableData(doc.data()));
+
   const setCallWaiter = () => {
     db.collection("notifications")
       .doc(`waiter${tableData.tableNo}`)
@@ -41,12 +42,9 @@ const Actions = () => {
         event: "Calling Waiter",
         created: firebase.firestore.Timestamp.now(),
       })
-      .then(() =>
-        notification.success({
-          message: "Someone will Assist you soon",
-        })
-      );
+      .then(() => navigate("/success"));
   };
+
   const setGetBill = () => {
     db.collection("notifications")
       .doc(`bill${tableData.tableNo}`)
@@ -57,12 +55,9 @@ const Actions = () => {
         event: "Asking Bill",
         created: firebase.firestore.Timestamp.now(),
       })
-      .then(() =>
-        notification.success({
-          message: "Someone will Assist you soon",
-        })
-      );
+      .then(() => navigate("/success"));
   };
+
   const setNeedWater = () => {
     db.collection("notifications")
       .doc(`water${tableData.tableNo}`)
@@ -73,11 +68,7 @@ const Actions = () => {
         event: "Asking for Water",
         created: firebase.firestore.Timestamp.now(),
       })
-      .then(() =>
-        notification.success({
-          message: "Someone will Assist you soon",
-        })
-      );
+      .then(() => navigate("/success"));
   };
   const setNeedSugar = () => {
     db.collection("notifications")
@@ -89,60 +80,62 @@ const Actions = () => {
         event: "Asking for Sugar",
         created: firebase.firestore.Timestamp.now(),
       })
-      .then(() =>
-        notification.success({
-          message: "Someone will Assist you soon",
-        })
-      );
+      .then(() => navigate("/success"));
   };
+
   return (
-    <div className="container">
-      <NavBar mode="light">
-        <Title level={2}>Call Bell</Title>
-      </NavBar>
-      <Row gutter={[16, 16]} className="action-container">
+    <div className="container center">
+      <Image width={100} src={logo} style={{ marginTop:"30%" }} />
+      <Title style={{ color: "white" }} level={2}>
+        Call Bell
+      </Title>
+      <Row
+        gutter={[16, 16]}
+        style={{ marginTop: "20%" }}
+        className="action-container"
+      >
         <Col span={12}>
           <Button
-            icon={<Waiter className="svg-icon" />}
             type="primary"
             onClick={setCallWaiter}
             size="large"
             className="full-btn"
           >
-            Call Waiter
+            <Waiter className="svg-icon" />
+            <Col>Call Waiter</Col>
           </Button>
         </Col>
         <Col span={12}>
           <Button
-            icon={<Discount className="svg-icon" />}
             type="primary"
             onClick={setGetBill}
             size="large"
             className="full-btn"
           >
-            Get Bill
+            <Discount className="svg-icon" />
+            <Col>Get Bill</Col>
           </Button>
         </Col>
         <Col span={12}>
           <Button
-            icon={<Water className="svg-icon" />}
             type="primary"
             size="large"
             className="full-btn"
             onClick={setNeedWater}
           >
-            Need Water
+            <Water className="svg-icon" />
+            <Col>Need Water</Col>
           </Button>
         </Col>
         <Col span={12}>
           <Button
-            icon={<Sugar className="svg-icon" />}
             type="primary"
             onClick={setNeedSugar}
             size="large"
             className="full-btn"
           >
-            Need Sugar
+            <Sugar className="svg-icon" />
+            <Col>Need Sugar</Col>
           </Button>
         </Col>
       </Row>
